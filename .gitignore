@@ -13,9 +13,7 @@ yarn-error.log*
 /.changelog
 .npm/
 yarn.lock
-.env.prod
 .venv
-.env.prod.db
 *.pyc
 *.pyo
 dist/
