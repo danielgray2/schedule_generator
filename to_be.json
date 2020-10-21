@@ -1,30 +1,5 @@
-[
-    {
-        "task_description": "Walk the dog",
-        "precedent": 1,
-        "times": [
-            {
-                "date": 4949484938,
-                "weight": 1
-            },
-            {
-                "date": 8749347489477,
-                "weight": 2
-            }
-        ]
-    },
-    {
-        "task_description": "Brush the dog",
-        "precedent": 2,
-        "times": [
-            {
-                "date": 49494848438,
-                "weight": 1
-            },
-            {
-                "date": 874747489477,
-                "weight": 2
-            }
-        ]
-    }
-]
+{
+    "task_description": "Walk the dog",
+    "precedent": 1,
+    "time": "November 19 6:00 AM"
+}
