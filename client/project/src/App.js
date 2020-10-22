@@ -1,6 +1,11 @@
 import React from 'react';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
+import Nav from './Nav'
+import Home from './Home'
+import Schedule from './Schedule';
+import Login from './Login';
 
 const axios = require('axios').default;
 
@@ -13,22 +18,14 @@ async function getText(){
 function App() {
   getText();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-          Here is the value:.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Nav />
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route path="/schedule" component={Schedule}/>
+          <Route path="/login" component={Login}/>
+        </Switch>
+        
     </div>
   );
 }
