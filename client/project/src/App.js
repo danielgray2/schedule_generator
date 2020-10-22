@@ -19,7 +19,7 @@ function App() {
   getText();
   return (
     <div>
-      <Nav />
+      <Nav/>
         <Switch>
           <Route exact path="/" component={Home}/>
           <Route path="/schedule" component={Schedule}/>
