@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -15,14 +15,28 @@ class User(db.Model):
     def __init__(self, email):
         self.email = email
 
-@app.route("/")
-def hello_world():
-    return jsonify(hello="world")
-
-@app.route("/another")
-def another():
-    return jsonify(goodbye="bye")
+task_info = {}
 
 @app.route("/static/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
+
+@app.route('/additem', methods=['POST', 'GET'])
+def index():
+
+    if request.method == 'POST':
+        task_content = request.get_json()
+
+        if not task_content["time"] in task_info:
+            return_dict = {"added_successfully": "true",
+                            "task_received": task_content}
+            task_info[task_content["time"]] = task_content
+            return jsonify(return_dict)
+
+        return_dict = {"added_successfully": "false",
+                        "task_received": {}}
+        return jsonify(return_dict)
+
+@app.route("/tasklist")
+def get_task_list():
+    return jsonify(task_info)
