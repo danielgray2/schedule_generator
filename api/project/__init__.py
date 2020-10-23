@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -26,3 +26,10 @@ def another():
 @app.route("/static/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
+
+@app.route('/additem', methods=['POST', 'GET'])
+def index():
+
+    if request.method == 'POST':
+        task_content = request.get_json()
+        return jsonify(my_return_value)
