@@ -21,7 +21,7 @@ task_info = {}
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
 
-@app.route('/additem', methods=['POST', 'GET'])
+@app.route('/additem', methods=['POST'])
 def index():
 
     if request.method == 'POST':

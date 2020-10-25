@@ -16,7 +16,6 @@ export default function CenteredTabs() {
     let location = useLocation();
 
     const handleChange = (event, newValue) => {
-        console.log("Came here");
         setValue(newValue);
     };
 
@@ -29,8 +28,9 @@ export default function CenteredTabs() {
             textColor="primary"
             centered
         >
-            <Tab label="Home" value="/" component={Link} to="/" />
-            <Tab label="Schedule" value="/schedule" component={Link} to="/schedule" />
+            <Tab label="New Task" value="/" component={Link} to="/" />
+            <Tab label="Tasks" value="/tasks" component={Link} to="/tasks" />
+            <Tab label="Calendar" value="/schedule" component={Link} to="/schedule" />
         </Tabs>
         </Paper>
     );

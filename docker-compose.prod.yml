@@ -10,6 +10,7 @@ services:
     command: gunicorn --bind 0.0.0.0:5000 manage:app
     volumes:
       - static_volume:/home/app/api/project/static
+      - ./api/:/usr/src/app/
     expose:
       - 5000
     env_file:
@@ -43,6 +44,7 @@ services:
       - 3000:3000
     stdin_open: true
     container_name: client
+    command: ["npm", "start"]
 
 volumes:
   postgres_data:

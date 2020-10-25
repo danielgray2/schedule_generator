@@ -5,17 +5,9 @@ import Nav from './Nav'
 import Home from './Home'
 import Schedule from './Schedule';
 import Login from './Login';
-
-const axios = require('axios').default;
-
-async function getText(){
-  var resp = await axios.get("/another");
-  console.log(resp);
-  return resp;
-}
+import Tasks from './Tasks';
 
 function App() {
-  getText();
   return (
     <div>
       <Nav/>
@@ -23,6 +15,7 @@ function App() {
           <Route exact path="/" component={Home}/>
           <Route path="/schedule" component={Schedule}/>
           <Route path="/login" component={Login}/>
+          <Route path="/tasks" component={Tasks}/>
         </Switch>
         
     </div>
