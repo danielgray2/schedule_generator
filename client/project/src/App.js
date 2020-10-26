@@ -1,34 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
+import {Switch, Route} from 'react-router-dom';
 import './App.css';
-
-const axios = require('axios').default;
-
-async function getText(){
-  var resp = await axios.get("/another");
-  console.log(resp);
-  return resp;
-}
+import Nav from './Nav'
+import Home from './Home'
+import Schedule from './Schedule';
+import Login from './Login';
+import Tasks from './Tasks';
 
 function App() {
-  getText();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-          Here is the value:.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Nav/>
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route path="/schedule" component={Schedule}/>
+          <Route path="/login" component={Login}/>
+          <Route path="/tasks" component={Tasks}/>
+        </Switch>
+        
     </div>
   );
 }

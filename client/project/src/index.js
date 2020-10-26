@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import axios from 'axios';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 //axios.defaults.baseURL = 'http://schedule_generator_nginx_1:1337/';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Router>
     <App />
-  </React.StrictMode>,
+  </Router>,
   document.getElementById('root')
 );
 
