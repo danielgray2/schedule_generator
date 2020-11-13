@@ -26,15 +26,14 @@ services:
       - 3000:3000
     stdin_open: true
     container_name: client
+    command: ["npm", "start"]
 
   db:
     image: postgres:13-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=schedule_generator
 
 volumes:
-  postgres_data:
+  static_volume:
