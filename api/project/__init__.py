@@ -6,14 +6,29 @@ app.config.from_object("project.config.Config")
 db = SQLAlchemy(app)
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    tasks = db.relationship("Task")
 
-    def __init__(self, email):
+    def __init__(self, email, password):
         self.email = email
+        self.password = password
+
+class Task(db.Model):
+    __tablename__ = "task"
+
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, name, time, user_id):
+        self.name = name
+        self.time = time
+        self.user_id = user_id
 
 task_info = {}
 
