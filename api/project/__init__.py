@@ -35,8 +35,6 @@ class Task(db.Model):
         self.time = time
         self.user_id = user_id
 
-# task_info = {}
-
 @app.route("/static/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
@@ -47,25 +45,18 @@ def index():
     if request.method == 'POST':
         task_content = request.get_json()
 
-        task = Task(task_content["name"], task_content["time"], task_content["user_id"])
-
-        db.session.add(task)
-        db.session.commit()
-
         has_task = Task.query.filter_by(user_id=task_content["user_id"], time=task_content["time"])
-        task_search = has_task[0]
 
-        if task_search["time"] != task_content["time"]:
+        if len(has_task) == 0:
+            task = Task(task_content["name"], task_content["time"], task_content["user_id"])
 
-            return_task_dict = {task_search["name"], task_search["time"], task_search["user_id"]}
+            db.session.add(task)
+            db.session.commit()
+            return_task_dict = {"name": task_content["name"], "time": task_content["time"], "user_id": task_content["user_id"]}
 
             return jsonify(return_task_dict)
 
-        if task_search["time"] == task_content["time"]:
-            
-            return_task_dict = {}
-
-            return jsonify(return_task_dict), status.HTTP_404_NOT_FOUND
+        return jsonify({}), status.HTTP_404_NOT_FOUND
 
 
 
@@ -81,41 +72,51 @@ def index():
         #                 "task_received": {}}
         # return jsonify(return_dict)
 
-# @app.route("/tasklist")
-# def get_task_list():
-#     return jsonify(task_info)
+@app.route("/tasklist")
+def get_task_list():
+    task_content = request.get_json()
+    tasks = Task.query.filter_by(user_id=task_content["user_id"])
+    ret_list = []
+    for task in tasks:
+        curr_dict = {}
+        curr_dict["id"] = task.id
+        curr_dict["name"] = task.name
+        curr_dict["time"] = task.time
+        ret_list.append(curr_dict)
+
+    return jsonify(ret_list)
 
 @app.route("/signup", methods=['POST'])
 def signup():
     if request.method == 'POST':
         signup_content = request.get_json()
 
-        user = User(signup_content["firstname"], signup_content["lastname"], signup_content["email"], signup_content["password"])
+        users_with_email = User.query.filter_by(email=signup_content["email"])
+        if(len(users_with_email) == 0):
+            user = User(signup_content["firstname"], signup_content["lastname"], signup_content["email"], signup_content["password"])
+            db.session.add(user)
+            db.session.commit()
 
-        db.session.add(user)
-        db.session.commit()
+            return jsonify({})
+    
+    return jsonify({}), status.HTTP_404_NOT_FOUND
 
 @app.route("/login", methods=['POST'])
 def login():
     if request.method == 'POST':
         login_content = request.get_json()
 
-        # q = db.session.query(User)
-        # q.filter(User.email == login_content["email"])
         has_email = User.query.filter_by(email=login_content["email"])
 
         if len(has_email) == 1:
             
             user = has_email[0]
 
-            if user["password"] == login_content["password"]:
+            if user.password == login_content["password"]:
                 
-                return_login_dict = {user["firstname"], user["lastname"], user["email"], user["password"]}
+                return_login_dict = {"firstname": user["firstname"], "lastname": user["lastname"], "email": user["email"], "password": user["password"]}
 
                 return jsonify(return_login_dict)
 
-            if user["password"] != login_content["password"]:
-
-                return_login_dict = {}
-
-                return jsonify(return_login_dict), status.HTTP_404_NOT_FOUND
+        return_login_dict = {}
+        return jsonify(return_login_dict), status.HTTP_404_NOT_FOUND
