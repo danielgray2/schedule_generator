@@ -7,7 +7,7 @@ function Home() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>New Task</h1>
+        <h1>The Calendar</h1>
         <TaskForm/>
       </header>
     </div>
