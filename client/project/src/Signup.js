@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+function SignUp(props) {
   const classes = useStyles();
 
   const [firstName, setFirstName] = React.useState("");
@@ -81,7 +82,9 @@ export default function SignUp() {
       "email": email,
       "password": password
     });
-    console.log(resp.data);
+    if(resp.status == 200){
+      props.history.push("/");
+    }
     return resp;
   }
 
@@ -181,5 +184,6 @@ export default function SignUp() {
       </Box>
     </Container>
   );
-
 }
+
+export default withRouter(SignUp);

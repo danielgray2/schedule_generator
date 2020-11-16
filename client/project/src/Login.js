@@ -8,7 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 //import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+function Login(props) {
   const classes = useStyles();
 
   const [email, setEmail] = React.useState("");
@@ -78,7 +78,8 @@ export default function Login() {
       "password": password
     });
     if(resp.status != 404){
-      return <Redirect to="/schedule"/>
+      State.loggedIn = true;
+      props.history.push("/schedule");
     }
     console.log(resp.data);
     return resp;
@@ -158,3 +159,5 @@ export default function Login() {
     </Container>
   );
 }
+
+export default withRouter(Login);
