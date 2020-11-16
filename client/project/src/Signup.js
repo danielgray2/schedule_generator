@@ -75,7 +75,7 @@ export default function SignUp() {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    var resp = await Axios.post("/additem", {
+    var resp = await Axios.post("/signup", {
       "firstname": firstName,
       "lastname": lastName,
       "email": email,

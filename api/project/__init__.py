@@ -45,7 +45,7 @@ def index():
     if request.method == 'POST':
         task_content = request.get_json()
 
-        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=task_content["time"])
+        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=task_content["time"]).all()
 
         if len(has_task) == 0:
             task = Task(task_content["name"], task_content["time"], task_content["user_id"])
@@ -75,7 +75,7 @@ def index():
 @app.route("/tasklist")
 def get_task_list():
     task_content = request.get_json()
-    tasks = Task.query.filter_by(user_id=task_content["user_id"])
+    tasks = Task.query.filter_by(user_id=task_content["user_id"]).all()
     ret_list = []
     for task in tasks:
         curr_dict = {}
@@ -91,7 +91,7 @@ def signup():
     if request.method == 'POST':
         signup_content = request.get_json()
 
-        users_with_email = User.query.filter_by(email=signup_content["email"])
+        users_with_email = User.query.filter_by(email=signup_content["email"]).all()
         if(len(users_with_email) == 0):
             user = User(signup_content["firstname"], signup_content["lastname"], signup_content["email"], signup_content["password"])
             db.session.add(user)
@@ -106,15 +106,14 @@ def login():
     if request.method == 'POST':
         login_content = request.get_json()
 
-        has_email = User.query.filter_by(email=login_content["email"])
-
+        has_email = User.query.filter_by(email=login_content["email"]).all()
         if len(has_email) == 1:
             
             user = has_email[0]
 
             if user.password == login_content["password"]:
                 
-                return_login_dict = {"firstname": user["firstname"], "lastname": user["lastname"], "email": user["email"], "password": user["password"]}
+                return_login_dict = {"firstname": user.firstname, "lastname": user.lastname, "email": user.email, "password": user.password}
 
                 return jsonify(return_login_dict)
 
