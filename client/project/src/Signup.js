@@ -57,6 +57,8 @@ function SignUp(props) {
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [invalidEmail, setInvalidEmail] = React.useState(true);
+  const [invalidPassword, setInvalidPassword] = React.useState(true);
 
   const handlefirstNameChange = (fName) => {
     setFirstName(fName.target.value);
@@ -67,11 +69,12 @@ function SignUp(props) {
   }
 
   const handleemailChange = (Email) => {
+    setInvalidEmail(EmailValidation(Email.target.value));
     setEmail(Email.target.value);
-    Emailvalidation(Email.target.value);
   }
   
   const handlepasswordChange = (pw) => {
+    setInvalidPassword(PasswordValidation(pw.target.value));
     setPassword(pw.target.value);
   }
 
@@ -89,14 +92,14 @@ function SignUp(props) {
     return resp;
   }
 
-  function Emailvalidation(values) {
-    const errors = {};
-    const emailPattern = /(.+)@(.+){2,}\.(.+){2,}/;
-    if (!emailPattern.test(values.email)) {
-      errors.email = 'Enter a valid email';
-    }
-  
-    return errors;
+  function EmailValidation(email){
+    const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return !emailPattern.test(email);
+  }
+
+  function PasswordValidation(password){
+    const pattern = /^[A-Za-z]\w{7,14}$/;
+    return !pattern.test(password);
   }
 
   return (
@@ -137,6 +140,8 @@ function SignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={invalidEmail}
+                helperText="Please enter a valid email"
                 variant="outlined"
                 required
                 fullWidth
@@ -150,6 +155,8 @@ function SignUp(props) {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
+                error={invalidPassword}
+                helperText="Passwords must contain 8 or more characters, a number, an uppercase and a lowercase"
                 required
                 fullWidth
                 name="password"
@@ -163,6 +170,7 @@ function SignUp(props) {
           </Grid>
           <Button
             type="submit"
+            disabled={invalidEmail || invalidPassword}
             fullWidth
             variant="contained"
             color="primary"
