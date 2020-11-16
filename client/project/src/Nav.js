@@ -21,14 +21,14 @@ export default function CenteredTabs() {
 
     return (
         <Paper className={classes.root}>
-        <Tabs   
+        <Tabs
             value={location.pathname}
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
             centered
         >
-            <Tab label="New Task" value="/" component={Link} to="/" />
+            <Tab label="New Task" value="/newtask" component={Link} to="/newtask" />
             <Tab label="Tasks" value="/tasks" component={Link} to="/tasks" />
             <Tab label="Calendar" value="/schedule" component={Link} to="/schedule" />
         </Tabs>

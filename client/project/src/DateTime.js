@@ -9,6 +9,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import State from './State';
 const axios = require('axios').default;
 
 const useStyles = makeStyles((theme) => ({
@@ -36,10 +37,12 @@ export default function TaskForm() {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    console.log("UserID: " + State.userId);
     var resp = await axios.post("/additem", {
       "task_description": description,
       "precedent": 1,
-      "time": selectedDate.getTime()
+      "time": selectedDate.getTime(),
+      "user_id": State.userId
     });
     console.log(resp.data);
     return resp;

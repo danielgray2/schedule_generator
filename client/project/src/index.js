@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Switch, Route} from 'react-router-dom';
 import './index.css';
-import App from './App';
+import { AppContainer, LoginContainer } from './App';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 //axios.defaults.baseURL = 'http://schedule_generator_nginx_1:1337/';
 
 ReactDOM.render(
   <Router>
-    <App />
+    <Switch>
+      <Route exact path={["/", "/login", "/signup"]} component={LoginContainer}/>
+      <Route component={AppContainer}/>
+    </Switch>
   </Router>,
   document.getElementById('root')
 );

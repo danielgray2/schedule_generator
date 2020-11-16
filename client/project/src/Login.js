@@ -16,7 +16,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link } from 'react-router-dom';
-import Signup from './Signup';
 import Axios from "axios";
 import State from "./State"
 
@@ -60,7 +59,6 @@ function Login(props) {
   const [password, setPassword] = React.useState("");
 
   const handleEmailChange = (Email) => {
-    console.log("came here");
     setEmail(Email.target.value);
     Emailvalidation(Email.target.value);
   }
@@ -71,22 +69,21 @@ function Login(props) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    console.log("email: " + email)
-    console.log("password: " + password)
     var resp = await Axios.post("/login", {
       "email": email,
       "password": password
     });
+    console.log("Data: " + resp.data);
     if(resp.status != 404){
       State.loggedIn = true;
+      State.userId = resp.data.id;
+      console.log("UserId: " + State.userId);
       props.history.push("/schedule");
     }
-    console.log(resp.data);
     return resp;
   }
 
   function Emailvalidation(values) {
-    console.log("butts");
     const errors = {};
     const emailPattern = /(.+)@(.+){2,}\.(.+){2,}/;
     if (!emailPattern.test(values.email)) {

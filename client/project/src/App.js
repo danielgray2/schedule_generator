@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import './App.css';
 import Nav from './Nav'
 import Home from './Home'
@@ -7,24 +7,25 @@ import Schedule from './Schedule';
 import Login from './Login';
 import Tasks from './Tasks';
 import Signup from './Signup';
-import State from './State';
 
-function App() {
+export function AppContainer() {
   return (
     <div>
       <Nav/>
-        <Switch>
-          <Route exact path="/">
-            {State.loggedIn ? <Redirect to="/schedule"/> : <Login/>}
-          </Route>
-          <Route path="/schedule" component={Schedule}/>
-          <Route path="/home" component={Home}/>
-          <Route path="/tasks" component={Tasks}/>
-          <Route path="/signup" component={Signup}/>
-        </Switch>
-        
+      <Route path="/schedule" component={Schedule}/>
+      <Route path="/home" component={Home}/>
+      <Route path="/tasks" component={Tasks}/>
+      <Route path="/newtask" component={Home}/>
     </div>
   );
 }
 
-export default App;
+export function LoginContainer(){
+  return(
+    <div>
+      <Route exact path="/" render={() => <Redirect to="/login" />}/>
+      <Route path="/login" component={Login}/>
+      <Route path="/signup" component={Signup}/>
+    </div>
+  )
+}

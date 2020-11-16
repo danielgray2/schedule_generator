@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
+import State from './State';
 const axios = require('axios').default;
 
 const useStyles = makeStyles((theme) => ({
@@ -22,14 +22,8 @@ function Row(props){
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Grid item xs={3}>
-        <Paper className={classes.paper}>{props.desc}</Paper>
-      </Grid>
-      <Grid item xs={3}>
-        <Paper className={classes.paper}>{new Date(props.dateTime).toLocaleDateString("en-US")}</Paper>
-      </Grid>
-      <Grid item xs={3}>
-        <Paper className={classes.paper}>{new Date(props.dateTime).toLocaleTimeString("en-US")}</Paper>
+      <Grid item xs={6}>
+        <Paper className={classes.paper}>{props.desc}---{new Date(props.dateTime).toLocaleDateString("en-US")}---{new Date(props.dateTime).toLocaleTimeString("en-US")}</Paper>
       </Grid>
     </React.Fragment>
   );
@@ -40,8 +34,11 @@ export default function Tasks() {
   const [tasks, setTasks] = React.useState({});
   
   useEffect(() => {
-    axios.get("/tasklist").then(resp => setTasks(resp.data));
-  })
+    axios.post("/tasklist", {
+      "user_id": State.userId
+    })
+    .then(resp => setTasks(resp.data));
+  }, [])
 
   return (
     <div className="App">

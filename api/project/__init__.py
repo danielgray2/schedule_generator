@@ -27,12 +27,12 @@ class Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    time = db.Column(db.Integer, nullable=False)
+    time = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, name, time, user_id):
         self.name = name
-        self.time = time
+        self.time = str(time)
         self.user_id = user_id
 
 @app.route("/static/<path:filename>")
@@ -44,45 +44,31 @@ def index():
 
     if request.method == 'POST':
         task_content = request.get_json()
-
-        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=task_content["time"]).all()
+        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=str(task_content["time"])).all()
 
         if len(has_task) == 0:
-            task = Task(task_content["name"], task_content["time"], task_content["user_id"])
+            task = Task(task_content["task_description"], str(task_content["time"]), task_content["user_id"])
 
             db.session.add(task)
             db.session.commit()
-            return_task_dict = {"name": task_content["name"], "time": task_content["time"], "user_id": task_content["user_id"]}
+            return_task_dict = {"task_description": task_content["task_description"], "time": task_content["time"], "user_id": task_content["user_id"]}
 
             return jsonify(return_task_dict)
 
         return jsonify({}), status.HTTP_404_NOT_FOUND
 
-
-
-
-
-        # if task_content["time"] not in task_info:
-        #   return_dict = {"added_successfully": "true",
-        #                     "task_received": task_content}
-        #     task_info[task_content["time"]] = task_content
-        #     return jsonify(return_dict)
-
-        # return_dict = {"added_successfully": "false",
-        #                 "task_received": {}}
-        # return jsonify(return_dict)
-
-@app.route("/tasklist")
-def get_task_list():
-    task_content = request.get_json()
-    tasks = Task.query.filter_by(user_id=task_content["user_id"]).all()
-    ret_list = []
-    for task in tasks:
-        curr_dict = {}
-        curr_dict["id"] = task.id
-        curr_dict["name"] = task.name
-        curr_dict["time"] = task.time
-        ret_list.append(curr_dict)
+@app.route("/tasklist", methods=["POST"])
+def task_list():
+    if request.method == "POST":
+        task_content = request.get_json()
+        tasks = Task.query.filter_by(user_id=task_content["user_id"]).all()
+        ret_list = []
+        for task in tasks:
+            curr_dict = {}
+            curr_dict["id"] = task.id
+            curr_dict["task_description"] = task.name
+            curr_dict["time"] = int(task.time)
+            ret_list.append(curr_dict)
 
     return jsonify(ret_list)
 
@@ -113,7 +99,7 @@ def login():
 
             if user.password == login_content["password"]:
                 
-                return_login_dict = {"firstname": user.firstname, "lastname": user.lastname, "email": user.email, "password": user.password}
+                return_login_dict = {"firstname": user.firstname, "lastname": user.lastname, "email": user.email, "id": user.id}
 
                 return jsonify(return_login_dict)
 

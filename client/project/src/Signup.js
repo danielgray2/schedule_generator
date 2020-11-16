@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Axios from 'axios';
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import { withRouter } from 'react-router-dom';
 
 function Copyright() {
@@ -83,13 +84,12 @@ function SignUp(props) {
       "password": password
     });
     if(resp.status == 200){
-      props.history.push("/");
+      props.history.push("/login");
     }
     return resp;
   }
 
   function Emailvalidation(values) {
-    console.log("butts");
     const errors = {};
     const emailPattern = /(.+)@(.+){2,}\.(.+){2,}/;
     if (!emailPattern.test(values.email)) {
