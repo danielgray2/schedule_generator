@@ -5,23 +5,21 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import Snackbar from '@material-ui/core/Snackbar';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Axios from 'axios';
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" to="https://material-ui.com/">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -59,6 +57,7 @@ function SignUp(props) {
   const [password, setPassword] = React.useState("");
   const [invalidEmail, setInvalidEmail] = React.useState(true);
   const [invalidPassword, setInvalidPassword] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handlefirstNameChange = (fName) => {
     setFirstName(fName.target.value);
@@ -80,17 +79,28 @@ function SignUp(props) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    var resp = await Axios.post("/signup", {
-      "firstname": firstName,
-      "lastname": lastName,
-      "email": email,
-      "password": password
-    });
-    if(resp.status == 200){
-      props.history.push("/login");
+    try{
+      var resp = await Axios.post("/signup", {
+        "firstname": firstName,
+        "lastname": lastName,
+        "email": email,
+        "password": password
+      });
+    }catch(error){
+      setOpen(true);
+      return resp;
     }
+    
+    props.history.push("/login");
     return resp;
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   function EmailValidation(email){
     const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -156,7 +166,7 @@ function SignUp(props) {
               <TextField
                 variant="outlined"
                 error={invalidPassword}
-                helperText="Passwords must contain 8 or more characters, a number, an uppercase and a lowercase"
+                helperText="Passwords must contain 8 or more characters."
                 required
                 fullWidth
                 name="password"
@@ -168,6 +178,14 @@ function SignUp(props) {
               />
             </Grid>
           </Grid>
+          <div className={classes.errorAlert}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                  Unable to create account. Try a different email.
+              </Alert>
+            </Snackbar>
+          </div>
           <Button
             type="submit"
             disabled={invalidEmail || invalidPassword}
@@ -180,7 +198,7 @@ function SignUp(props) {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to="/login">
                 Already have an account? Sign in
               </Link>
             </Grid>

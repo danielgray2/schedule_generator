@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import TaskForm from './DateTime.js';
-const axios = require('axios').default;
 
 function Home() {
   return (

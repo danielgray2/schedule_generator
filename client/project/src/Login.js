@@ -4,11 +4,11 @@ import './App.css';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import Snackbar from '@material-ui/core/Snackbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 //import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -33,6 +33,12 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  errorAlert: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -57,6 +63,7 @@ function Login(props) {
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [open, setOpen] = React.useState(false);
 
   const handleEmailChange = (Email) => {
     setEmail(Email.target.value);
@@ -69,19 +76,29 @@ function Login(props) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    var resp = await Axios.post("/login", {
-      "email": email,
-      "password": password
-    });
-    console.log("Data: " + resp.data);
-    if(resp.status != 404){
-      State.loggedIn = true;
-      State.userId = resp.data.id;
-      console.log("UserId: " + State.userId);
-      props.history.push("/schedule");
+    try{
+      var resp = await Axios.post("/login", {
+        "email": email,
+        "password": password
+      });
+    }catch(error){
+      setOpen(true);
+      return resp;
     }
+
+    State.loggedIn = true;
+    State.userId = resp.data.id;
+    console.log("UserId: " + State.userId);
+    props.history.push("/schedule");
     return resp;
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   function Emailvalidation(values) {
     const errors = {};
@@ -127,6 +144,14 @@ function Login(props) {
             autoComplete="current-password"
             onChange={handlepasswordChange}
           />
+          <div className={classes.errorAlert}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                Email and password combination not found.
+              </Alert>
+            </Snackbar>
+          </div>
           <Button
             type="submit"
             fullWidth

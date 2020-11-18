@@ -44,8 +44,11 @@ def index():
 
     if request.method == 'POST':
         task_content = request.get_json()
-        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=str(task_content["time"])).all()
 
+        if task_content["user_id"] == "":
+            return jsonify({}), status.HTTP_401_UNAUTHORIZED
+
+        has_task = Task.query.filter_by(user_id=task_content["user_id"], time=str(task_content["time"])).all()
         if len(has_task) == 0:
             task = Task(task_content["task_description"], str(task_content["time"]), task_content["user_id"])
 
@@ -61,6 +64,10 @@ def index():
 def task_list():
     if request.method == "POST":
         task_content = request.get_json()
+
+        if task_content["user_id"] == "":
+            return jsonify({}), status.HTTP_401_UNAUTHORIZED
+
         tasks = Task.query.filter_by(user_id=task_content["user_id"]).all()
         ret_list = []
         for task in tasks:
@@ -76,6 +83,9 @@ def task_list():
 def signup():
     if request.method == 'POST':
         signup_content = request.get_json()
+
+        if signup_content["email"] == "" or signup_content["firstname"] == "" or signup_content["lastname"] == "" or signup_content["password"] == "":
+            return jsonify({}), status.HTTP_404_NOT_FOUND
 
         users_with_email = User.query.filter_by(email=signup_content["email"]).all()
         if(len(users_with_email) == 0):
