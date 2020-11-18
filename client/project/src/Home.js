@@ -1,14 +1,24 @@
 import React from 'react';
 import './App.css';
-import TaskForm from './DateTime.js';
+import { TaskForm } from './DateTime.js';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+
+const useStyles = makeStyles(() => ({
+  title: {
+    marginTop: "60px",
+    marginBottom: "50px"
+  }
+}));
 
 function Home() {
+  const classes = useStyles();
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>The Calendar</h1>
+        <Typography variant="h3" className={classes.title}>
+          New Task
+        </Typography>
         <TaskForm/>
-      </header>
     </div>
   );
 }

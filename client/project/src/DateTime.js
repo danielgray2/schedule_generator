@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export default function TaskForm() {
+export function TaskForm() {
   // The first commit of Material-UI, these are react hooks
   const [selectedDate, setSelectedDate] = React.useState(new Date().setSeconds(0, 0));
   const [description, setDescription] = React.useState("");

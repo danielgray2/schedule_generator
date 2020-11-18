@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import './App.css';
 import Nav from './Nav'
@@ -7,15 +7,25 @@ import Schedule from './Schedule';
 import Login from './Login';
 import Tasks from './Tasks';
 import Signup from './Signup';
+import State from './State';
 
 export function AppContainer() {
+
   return (
     <div>
       <Nav/>
-      <Route path="/schedule" component={Schedule}/>
-      <Route path="/home" component={Home}/>
-      <Route path="/tasks" component={Tasks}/>
-      <Route path="/newtask" component={Home}/>
+      <Route path="/schedule">
+        {State.userId == "" ? <Redirect to="/login"/> : <Schedule/>}
+      </Route>
+      <Route path="/home">
+        {State.userId == "" ? <Redirect to="/login"/> : <Home/>}
+      </Route>
+      <Route path="/tasks">
+        {State.userId == "" ? <Redirect to="/login"/> : <Tasks/>}
+      </Route>
+      <Route path="/newtask">
+        {State.userId == "" ? <Redirect to="/login"/> : <Home/>}
+      </Route>
     </div>
   );
 }
